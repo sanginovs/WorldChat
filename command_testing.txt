@@ -1,0 +1,6 @@
+Unit Testing
+
+-Automated -as little as possible code
+-Independent - all your test should be independent from each other
+- Consistent and repeatable -always get the same results when you run the test
+-Maintainable - constantly work on it to make it better

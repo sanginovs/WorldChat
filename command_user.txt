@@ -1,3 +1,11 @@
+Mongo Restart:
+rm -fr ~/data/mongod.lock
+mongod -f mongod.conf
+chmod 755 mongo_restart
+./mongo_restart
+
+
+
 Creating user model for our user
 add mongo Engine to application.py:
 

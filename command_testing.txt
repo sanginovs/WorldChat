@@ -4,3 +4,9 @@ Unit Testing
 -Independent - all your test should be independent from each other
 - Consistent and repeatable -always get the same results when you run the test
 -Maintainable - constantly work on it to make it better
+
+
+AWS
+mkdir ~/.aws
+vi ~/.aws/credentials  #was credentials
+~/.aws/config  #this file is where you store region mailer

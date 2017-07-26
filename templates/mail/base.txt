@@ -1,0 +1,5 @@
+{% block body %}{% endblock %}
+
+---
+The WorldChat Team
+{{ config.HOSTNAME }}

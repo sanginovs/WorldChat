@@ -81,6 +81,7 @@ def profile(username):
         abort(404)
 
 
+
 @user_app.route('/edit', methods=('GET', 'POST'))
 def edit():
     error = None
@@ -89,26 +90,40 @@ def edit():
     if user:
         form = EditForm(obj=user)
         if form.validate_on_submit():
-            if user.username != form.username.data:
+            if user.username != form.username.data.lower():
                 if User.objects.filter(username=form.username.data.lower()).first():
                     error = "Username already exists"
                 else:
                     session['username'] = form.username.data.lower()
                     form.username.data = form.username.data.lower()
-            if user.email != form.email.data:
+            if user.email != form.email.data.lower():
                 if User.objects.filter(email=form.email.data.lower()).first():
                     error = "Email already exists"
                 else:
-                    form.email.data = form.email.data.lower()
+                    code = str(uuid.uuid4())
+                    
+                    user.change_configuration = {
+                        "new_email": form.email.data.lower(),
+                        "confirmation_code": code
+                    }
+                    user.email_confirmed = False
+                    form.email.data = user.email
+                    message = "You will need to confirm the new email to complete this change"
+                    
+                    # email the user
+                    body_html = render_template('mail/user/change_email.html', user=user)
+                    body_text = render_template('mail/user/change_email.txt', user=user)
+                    email(user.change_configuration['new_email'], "Confirm your new email", body_html, body_text)
+                    
             if not error:
                 form.populate_obj(user)
                 user.save()
-                message = "Profile updated"
+                if not message:
+                    message = "Profile updated"
+    
         return render_template("user/edit.html", form=form, error=error, message=message)
     else:
         abort(404)
-        
-        
 @user_app.route('/confirm/<username>/<code>', methods=('GET', 'POST'))
 def confirm(username, code):
     user = User.objects.filter(username=username).first()

@@ -3,7 +3,7 @@ import bcrypt
 import uuid 
 
 from user.models import User
-from user.forms import RegisterForm, LoginForm, EditForm
+from user.forms import RegisterForm, LoginForm, EditForm, ForgotForm, PasswordResetForm
 from utilities.common import email
 
 user_app = Blueprint('user_app', __name__)
@@ -137,4 +137,90 @@ def confirm(username, code):
     else:
         abort(404)
 
+@user_app.route('/forgot', methods=('GET', 'POST'))
+def forgot():
+    error = None
+    message = None
+    form = ForgotForm()
+    if form.validate_on_submit():
+        user = User.objects.filter(email=form.email.data.lower()).first()
+        if user:
+            code = str(uuid.uuid4())
+            user.change_configuration={
+                "password_reset_code": code
+            }
+            user.save()
+            
+            # email the user
+            body_html = render_template('mail/user/password_reset.html', user=user)
+            body_text = render_template('mail/user/password_reset.txt', user=user)
+            email(user.email, "Password reset request", body_html, body_text)
+            
+        message = "You will receive a password reset email if we find that email in our system"
+    return render_template('user/forgot.html', form=form, error=error, message=message)
 
+@user_app.route('/password_reset/<username>/<code>', methods=('GET', 'POST'))
+def password_reset(username, code):
+    message = None
+    require_current = None
+    
+    form = PasswordResetForm()
+    
+    user = User.objects.filter(username=username).first()
+    if not user or code != user.change_configuration.get('password_reset_code'):
+        abort(404)
+        
+    if request.method == 'POST':
+        del form.current_password
+        if form.validate_on_submit():
+            salt = bcrypt.gensalt()
+            hashed_password = bcrypt.hashpw(form.password.data, salt)
+            user.password = hashed_password
+            user.change_configuration = {}
+            user.save()
+            
+            if session.get('username'):
+                session.pop('username')
+            return redirect(url_for('user_app.password_reset_complete'))
+            
+    return render_template('user/password_reset.html',
+        form=form,
+        message=message,
+        require_current=require_current,
+        username=username,
+        code=code
+    )
+    
+@user_app.route('/password_reset_complete')
+def password_reset_complete():
+    return render_template('user/password_change_confirmed.html')
+    
+@user_app.route('/change_password', methods=('GET', 'POST'))
+def change_password():
+    require_current = True
+    error = None
+    form = PasswordResetForm()
+    
+    user = User.objects.filter(username=session.get('username')).first()
+    
+    if not user:
+        abort(404)
+        
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if bcrypt.hashpw(form.current_password.data, user.password) == user.password:
+                salt = bcrypt.gensalt()
+                hashed_password = bcrypt.hashpw(form.password.data, salt)
+                user.password = hashed_password
+                user.save()
+                # if user is logged in, log him out
+                if session.get('username'):
+                    session.pop('username')
+                return redirect(url_for('user_app.password_reset_complete'))
+            else:
+                error = "Incorrect password"
+    return render_template('user/password_reset.html',
+        form=form,
+        require_current=require_current,
+        error=error
+    )

@@ -147,7 +147,7 @@ class UserTest(unittest.TestCase):
         user = self.user_dict()
         user['username'] = "TestUsername"
         rv = self.app.post('/edit', data=user)
-        assert "Username already exists" in str(rv.data)     
+        assert "Username already exists" in str(rv.data)          
         
     def test_get_profile(self):
         # create a user

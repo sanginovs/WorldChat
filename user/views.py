@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, session, url_for, abort
 import bcrypt
 import uuid 
+import os
+from werkzeug import secure_filename #stops malicious javascript other injections on the form
 
 from user.models import User
 from user.forms import RegisterForm, LoginForm, EditForm, ForgotForm, PasswordResetForm
 from utilities.common import email
+from settings import UPLOAD_FOLDER
+from utilities.imaging import thumbnail_process
 
 user_app = Blueprint('user_app', __name__)
     
@@ -73,7 +77,7 @@ def logout():
 def profile(username):
     edit_profile=False #if user is lookin at itself this path should be true
     user = User.objects.filter(username=username).first() #if username exist in the database
-    if session.get('username') and user.username == session.get('username'): #if user is looking at his own profile
+    if user and session.get('username') and user.username == session.get('username'): #if user is looking at his own profile
         edit_profile=True
     if user: #if user exist in the database
         return render_template('user/profile.html', user=user, edit_profile=edit_profile)
@@ -90,6 +94,18 @@ def edit():
     if user:
         form = EditForm(obj=user)
         if form.validate_on_submit():
+            # check if image
+            image_ts = None
+            #if there's an image attached to the form , you check it:
+            if request.files.get('image'): #check if user uploaded a file
+                #get the file user uploaded on the form 
+                filename = secure_filename(form.image.data.filename) 
+                file_path = os.path.join(UPLOAD_FOLDER, 'user', filename)
+                form.image.data.save(file_path) #save it on the file path: static/img/user
+                image_ts = str(thumbnail_process(file_path, 'user', str(user.id))) #generate a timestamp for the uploaded file
+                #at the end if no error, store this timestamp in the database
+            
+                
             if user.username != form.username.data.lower():
                 if User.objects.filter(username=form.username.data.lower()).first():
                     error = "Username already exists"
@@ -117,11 +133,16 @@ def edit():
                     
             if not error:
                 form.populate_obj(user)
+                if image_ts:
+                    user.profile_image = image_ts   #save image into database
+                    #after it saves, 4 images(raw, lg, xlg, sm) show up in static/img/user folder for a user 
                 user.save()
+                
                 if not message:
                     message = "Profile updated"
+                    
     
-        return render_template("user/edit.html", form=form, error=error, message=message)
+        return render_template("user/edit.html", form=form, error=error, message=message, user=user)
     else:
         abort(404)
 @user_app.route('/confirm/<username>/<code>', methods=('GET', 'POST'))

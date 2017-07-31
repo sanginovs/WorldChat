@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, session, redirect, url_for
+from flask import Blueprint, abort, session, redirect, url_for, request
 
 from user.models import User
 from relationship.models import Relationship
@@ -9,6 +9,7 @@ relationship_app = Blueprint('relationship_app', __name__)
 @relationship_app.route('/add_friend/<to_username>')
 @login_required  #a user who isn't logged can't access this functionality
 def add_friend(to_username):
+    ref=request.referrer
     logged_user = User.objects.filter(username=session.get('username')).first() #get logged user
     to_user = User.objects.filter(username=to_username).first() #get username of a user we want to friend
     

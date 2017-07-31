@@ -76,18 +76,51 @@ def logout():
     session.pop('username')
     return redirect(url_for('user_app.login'))
     
-@user_app.route('/<username>', methods=('GET', 'POST'))
-def profile(username):
+@user_app.route('/<username>/friends/<int:page>')  #route for pagination
+@user_app.route('/<username>/friends', endpoint='profile-friends')    
+@user_app.route('/<username>')
+def profile(username, page=1):
+    friends_page=False
+    logged_user=None
     rel=None
     edit_profile=False #if user is lookin at itself this path should be true
     user = User.objects.filter(username=username).first() #if username exist in the database
-    if user and session.get('username') and user.username == session.get('username'): #if user is looking at his own profile
-        edit_profile=True
-    if user: #if user exist in the database
-        if session.get('username'):  #checking the relationship of logged in user vs another user
+    if user:
+        if session.get('username'): #if use is logged in
             logged_user = User.objects.filter(username=session.get('username')).first()
             rel = Relationship.get_relationship(logged_user, user)
-        return render_template('user/profile.html', user=user, edit_profile=edit_profile, rel=rel)
+            
+        if session.get('username') and user.username == session.get('username'): #if user is looking at his own profile
+            edit_profile=True
+        
+        
+        
+        # get friends
+        friends = Relationship.objects.filter(
+            from_user=user,
+            rel_type=Relationship.FRIENDS,
+            status=Relationship.APPROVED
+            )
+        friends_total = friends.count()
+        
+        
+    
+        if 'friends' in request.url:
+            friends_page = True
+            #paginate is mongoengine helper; 
+            friends = friends.paginate(page=page, per_page=3) #page passed into url
+        else:
+            friends = friends[:5] #first five
+        
+        return render_template('user/profile.html', 
+            user=user, 
+            logged_user=logged_user,
+            rel=rel, 
+            edit_profile=edit_profile,
+            friends=friends,
+            friends_total=friends_total,
+            friends_page=friends_page
+            )
     else:
         abort(404)
 

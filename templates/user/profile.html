@@ -12,10 +12,10 @@
 
   <div class="col-md-3">
 
-    <img class="img-thumbnail" src="//placehold.it/200x200" width="200" heigh="200" alt="{{ user.username }}">
+    <img class="img-thumbnail" src="{{ user.profile_imgsrc('xlg') }}" width="200" height="200" alt="{{ user.username }}">
 
-    <h3>{{ user.first_name }} {{ user.last_name }} </h3>
-    <h4><a href="{{ url_for('user_app.profile', username=user.username) }}" />@{{ user.username }}</a></h4>
+    <h3 class="profile-fullname">{{ user.first_name }} {{ user.last_name }}</h3>
+    <h3 class="profile-username"><a href="{{ url_for('user_app.profile', username=user.username) }}" />@{{ user.username }}</a></h3>
 
   </div> <!-- col-md-3 -->
   
@@ -34,9 +34,9 @@
             <a href="{{ url_for('relationship_app.add_friend', to_username=user.username) }}" role="button" class="btn btn-default">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Friend
             </a>  
-            <a href="{{ url_for('.edit') }}" role="button" class="btn btn-default">
+            <a href="{{ url_for('relationship_app.block', to_username=user.username) }}" role="button" class="btn btn-default">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Block
-            </a>  
+            </a>   
             {% endif %}
             
              {% if rel == "BLOCKED" %}

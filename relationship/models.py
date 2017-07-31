@@ -63,9 +63,19 @@ class Relationship(db.Document):
     req_date = db.IntField(db_field='rd', default=now()) #date request was sent
     approved_date = db.IntField(db_field="ad", default=0) #date whether user B approves or not
 
+    def is_friend(self, user):
+        if user:
+            return self.get_relationship(user, self.to_user)
+        else:
+            return None
+    
     #this is a helper method to check relationship of users on a model level
     @staticmethod #allows to add static method to class
     def get_relationship(from_user, to_user):
+        
+        if from_user == to_user: #if you are looking at your own profile
+            return 'SAME'
+            
         #filter - Returns an array with only those elements that match the condition. The returned elements are in the original order.
         rel = Relationship.objects.filter(
             from_user=from_user,
@@ -86,8 +96,8 @@ class Relationship(db.Document):
             if reverse_rel and reverse_rel.rel_type == Relationship.FRIENDS:
                 if reverse_rel.status == Relationship.PENDING:
                     return "REVERSE_FRIENDS_PENDING"
-                elif reverse_rel and reverse_rel.rel_type == Relationship.BLOCKED: #if user reverse blocked logged in user
-                    return "REVERSE_BLOCKED"
+            elif reverse_rel and reverse_rel.rel_type == Relationship.BLOCKED: #if user reverse blocked logged in user
+                return "REVERSE_BLOCKED"
             return None
 
     

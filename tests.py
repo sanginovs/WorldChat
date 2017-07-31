@@ -5,7 +5,7 @@ import unittest
 
 from user.tests import UserTest
 #every time you write a new test, add it to this file
-
+from relationship.tests import RelationshipTest
 
 if __name__== '__main__':
     unittest.main()

@@ -48,7 +48,7 @@ def add_friend(to_username):
         abort(404)
         
 
-@relationship_app.route('/unfriend/<to_username>')
+@relationship_app.route('/remove_friend/<to_username>')
 @login_required
 def remove_friend(to_username):
     logged_user = User.objects.filter(username=session.get('username')).first()

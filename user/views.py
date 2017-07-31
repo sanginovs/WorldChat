@@ -9,6 +9,9 @@ from user.forms import RegisterForm, LoginForm, EditForm, ForgotForm, PasswordRe
 from utilities.common import email
 from settings import UPLOAD_FOLDER
 from utilities.imaging import thumbnail_process
+from relationship.models import Relationship
+from user.decorators import login_required
+
 
 user_app = Blueprint('user_app', __name__)
     
@@ -75,18 +78,23 @@ def logout():
     
 @user_app.route('/<username>', methods=('GET', 'POST'))
 def profile(username):
+    rel=None
     edit_profile=False #if user is lookin at itself this path should be true
     user = User.objects.filter(username=username).first() #if username exist in the database
     if user and session.get('username') and user.username == session.get('username'): #if user is looking at his own profile
         edit_profile=True
     if user: #if user exist in the database
-        return render_template('user/profile.html', user=user, edit_profile=edit_profile)
+        if session.get('username'):  #checking the relationship of logged in user vs another user
+            logged_user = User.objects.filter(username=session.get('username')).first()
+            rel = Relationship.get_relationship(logged_user, user)
+        return render_template('user/profile.html', user=user, edit_profile=edit_profile, rel=rel)
     else:
         abort(404)
 
 
 
 @user_app.route('/edit', methods=('GET', 'POST'))
+@login_required
 def edit():
     error = None
     message = None

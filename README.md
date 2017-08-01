@@ -39,6 +39,8 @@ These instructions will get you a copy of the project up and running on your loc
 You can simply run(source setup.sh) the [setup.sh](setup.sh) file which installs 
 all the libraries listed in [requirements.txt](requirements.txt) file in a  virtual environment.
 
+Finally, modify [settings.py](settings.py.bak) file to fit to your own environment.
+
 ## Running the program
 
 Once your development environment is setup, activate your virtual environment and run the application using this command:

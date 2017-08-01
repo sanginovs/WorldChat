@@ -51,7 +51,7 @@ python manage.py runserver
 
 ## Running the tests
 
-There are separate test suites for relationship blueprint ([Relationship_test](relationship/tests.py)) and user blueprint ([User_test(user/tests.py)). 
+There are separate test suites for relationship blueprint ([Relationship_test](relationship/tests.py)) and user blueprint ([User_test](user/tests.py)). 
 Run unit tests using this command:
 
 ```

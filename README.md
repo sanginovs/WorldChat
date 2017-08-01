@@ -14,8 +14,7 @@ Moreover, when building WorldChat, I considered several techniques that allows m
 
 ## The structure of WorldChat
 
-WorldChat is a modular application with blueprints. In order to understand the concept of blueprints, please take
-a look at Flask documentation in the following [link](http://flask.pocoo.org/docs/0.12/blueprints/).
+WorldChat is a modular application that uses the concept of Flask blueprints. 
 
 ### Why Blueprints?
 
@@ -28,6 +27,8 @@ Blueprints in Flask are intended for these cases:
 * Register a blueprint multiple times on an application with different URL rules.
 * Provide template filters, static files, templates, and other utilities through blueprints. A blueprint does not have to implement applications or view functions.
 * Register a blueprint on an application for any of these cases when initializing a Flask extension.
+
+If you want to know more, please take a look at the Flask documentation in the following [link](http://flask.pocoo.org/docs/0.12/blueprints/).
 
 ## Getting Started
 

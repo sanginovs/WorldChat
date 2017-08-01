@@ -16,5 +16,12 @@ then
   virtualenv venv
 fi
 
+
+#Installing MongoDB:
+sudo apt-get install -y mongodb-org
+
+#To start MongoDB:
+mongod -f mongod.conf
+
 . venv/bin/activate
 pip install -r requirments.txt

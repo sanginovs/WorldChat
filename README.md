@@ -37,7 +37,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 You can simply run(source setup.sh) the [setup.sh](setup.sh) file which installs 
-all the libraries listed in [requirments.txt](requirments.txt) file in a  virtual environment.
+all the libraries listed in [requirements.txt](requirements.txt) file in a  virtual environment.
 
 ## Running the program
 
@@ -49,38 +49,20 @@ python manage.py runserver
 
 ## Running the tests
 
-There are separate test suites for relationship blueprint ([Relationship_test](relationship/tests.py)) and user blueprint. 
+There are separate test suites for relationship blueprint ([Relationship_test](relationship/tests.py)) and user blueprint ([User_test(user/tests.py)). 
 Run unit tests using this command:
 
 ```
 python tests.py
 ```
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-
 ## Built With
 
-* [Python](https://www.python.org/) - The programming language
-* [Tkinter](https://docs.python.org/2/library/tkinter.html) - Python Graphical User Interface Library
-
-
-## Authors
-
-* **Sher Sanginov**
+* Python Flask Web Framework- The programming language
+* MongoDB - NoSQL database
+* Amazon Web Services
+* Javascript
+* Bootstrap
 
 
 
-## License
-
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* **StackOverflow**

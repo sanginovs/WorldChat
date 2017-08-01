@@ -1,0 +1,8 @@
+SECRET_KEY = 'secret-key'
+DEBUG=True
+MONGODB_DB = ' '  #name of your database 
+HOSTNAME=' '
+UPLOAD_FOLDER ='/home/ubuntu/workspace/worlchat/static/img' #path to images
+STATIC_IMAGE_URL = 'img'
+AWS_BUCKET =' '  #images are stored  in amazon S3 bucket for better scalability
+AWS_CONTENT_URL =' ' #the url of aws bucket 

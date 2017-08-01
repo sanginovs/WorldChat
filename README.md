@@ -39,36 +39,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-```
-
-```
-
 ### Installing
 
-You can simply run the [setup.sh](setup.sh) file which installs all the dependecies for you.
-
-Or
-
-Install it without running the setup file:
-
-a) Installing Python 2.7
-```
-Download Python2.7 from Python website: https://www.python.org/downloads/
-```
-
-b) Install Tkinter Library
-
-```
-You can install Tkinter by simply typing this command in the terminal(linux):
-sudo apt-get install python-tk
-```
-
+You can simply run(source setup.sh) the [setup.sh](setup.sh) file which installs 
+all the libraries listed in [requirments.txt][requirments.txt] file in a  virtual environment.
 
 ## Running the program
 
-In order to run the program, you just need to run [main.py](main.py) file. You can run it from your IDE or terminal.
-Make sure you are inside this directory. In the terminal, type:
-python [main.py](main.py)
+Once your development environment is setup, activate your virtual environment and run the application using this command:
+
+```
+python manage.py runserver
+```
 
 ## Running the tests
 

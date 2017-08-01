@@ -34,15 +34,10 @@ If you want to know more, please take a look at the Flask documentation in the f
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
 ### Installing
 
 You can simply run(source setup.sh) the [setup.sh](setup.sh) file which installs 
-all the libraries listed in [requirments.txt][requirments.txt] file in a  virtual environment.
+all the libraries listed in [requirments.txt](requirments.txt) file in a  virtual environment.
 
 ## Running the program
 
@@ -54,7 +49,12 @@ python manage.py runserver
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+There are separate test suites for relationship blueprint ([Relationship_test](relationship/tests.py)) and user blueprint. 
+Run unit tests using this command:
+
+```
+python tests.py
+```
 
 ### Break down into end to end tests
 

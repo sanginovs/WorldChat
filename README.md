@@ -9,7 +9,7 @@ makes it easy for users to connect, chat and share with their friends and family
 
 ## Motivation
 
-WorldChat social application was built as my final project for the course I took on Udemy website.
+I am passionate about using technology to build things that connect people and communities.
 Moreover, when building WorldChat, I considered several techniques that allows me to scale the application better.
 
 ## The structure of WorldChat
